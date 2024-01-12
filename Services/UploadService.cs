@@ -14,7 +14,7 @@ public class UploadService : IUploadService
         var jsonResponse = await response.Content.ReadAsStringAsync();
         var settings = new JsonSerializerSettings
         {
-            Converters = { new Issue.CommentConverter() },
+            Converters = { new Issue.CommentConverter(), new Issue.AssigneeConverter() },
             ContractResolver = new DefaultContractResolver
             {
                 NamingStrategy = new SnakeCaseNamingStrategy()
@@ -23,12 +23,12 @@ public class UploadService : IUploadService
 
         var ids = JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
         var issues = new List<Issue>();
+        const string queryUrl =
+            "?fields=id,summary,description,comments(text,author(login,fullName)),assignee(l),type,state,priority,spentTime,customFields(name,value($type,value,login,ordinal(name)))";
         
         foreach (var a in ids)
         {
-            using var issueResponse = await client.GetAsync($"{a.Id}?fields=id,summary,description," +
-                "comments(text,author(login,fullName)),assignee,type,state,priority,spentTime,customFields(name," +
-                "value($type,value(name)))");
+            using var issueResponse = await client.GetAsync(a.Id + queryUrl);
             var issueJson = await issueResponse.Content.ReadAsStringAsync();
             
             if (issueJson != null)
