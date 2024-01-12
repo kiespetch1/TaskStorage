@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace TaskStorage.Entities;
+namespace ApplicationCore.Entities;
 
 public class Issue
 {

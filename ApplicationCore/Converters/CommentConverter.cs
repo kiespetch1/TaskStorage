@@ -1,8 +1,8 @@
+using ApplicationCore.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TaskStorage.Entities;
 
-namespace TaskStorage.Converters;
+namespace ApplicationCore.Converters;
 
 public class CommentConverter : JsonConverter
 {

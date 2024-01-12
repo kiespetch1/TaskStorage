@@ -1,4 +1,7 @@
-namespace TaskStorage;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+
+namespace PublicApi;
 
 public class Program
 {

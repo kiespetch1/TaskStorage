@@ -1,6 +1,6 @@
-using TaskStorage.Controllers.Entities;
+using ApplicationCore.Entities;
 
-namespace TaskStorage.Interfaces;
+namespace ApplicationCore.Interfaces;
 
 public interface IUploadService
 {

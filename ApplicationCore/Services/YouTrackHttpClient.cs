@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
 
-namespace TaskStorage.Services
+namespace ApplicationCore.Services
 {
     public class YouTrackHttpClient : HttpClient
     {

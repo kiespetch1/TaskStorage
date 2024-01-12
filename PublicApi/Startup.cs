@@ -1,9 +1,14 @@
+using ApplicationCore.Converters;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using TaskStorage.Converters;
-using TaskStorage.Interfaces;
-using TaskStorage.Services;
 
-namespace TaskStorage
+namespace PublicApi
 {
     public class Startup
     {

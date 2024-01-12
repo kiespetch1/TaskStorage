@@ -1,4 +1,4 @@
-namespace TaskStorage.Entities;
+namespace ApplicationCore.Entities;
 
 public enum State
 {

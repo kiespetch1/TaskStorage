@@ -1,8 +1,8 @@
 using System.Net.Http.Headers;
+using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using TaskStorage.Interfaces;
 
-namespace TaskStorage.Controllers
+namespace ApplicationCore.Controllers
 {
     [ApiController]
     [Route("api/")]

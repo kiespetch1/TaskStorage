@@ -1,9 +1,9 @@
+using ApplicationCore.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using TaskStorage.Controllers.Entities;
-using TaskStorage.Interfaces;
+using ApplicationCore.Entities;
 
-namespace TaskStorage.Services;
+namespace ApplicationCore.Services;
 
 public class UploadService : IUploadService
 {
