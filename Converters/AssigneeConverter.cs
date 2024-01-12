@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TaskStorage.Controllers.Entities;
+using TaskStorage.Entities;
 
 namespace TaskStorage.Converters;
 

@@ -1,4 +1,4 @@
-namespace TaskStorage.Controllers.Entities;
+namespace TaskStorage.Entities;
 
 public class Assignee
 {

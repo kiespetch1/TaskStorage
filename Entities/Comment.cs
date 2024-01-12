@@ -1,7 +1,6 @@
-using System.Net.Mime;
 using Newtonsoft.Json;
 
-namespace TaskStorage.Controllers.Entities;
+namespace TaskStorage.Entities;
 
 public class Comment
 {

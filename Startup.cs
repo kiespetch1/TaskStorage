@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using TaskStorage.Converters;
 using TaskStorage.Interfaces;
 using TaskStorage.Services;
 
@@ -19,9 +16,23 @@ namespace TaskStorage
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(); 
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    var customConverters = new List<JsonConverter>
+                    {
+                        new CommentConverter(),
+                        new AssigneeConverter(),
+                    };
 
+                    foreach (var converter in customConverters)
+                    {
+                        options.SerializerSettings.Converters.Add(converter);
+                    }
+                });
+            
             services.AddScoped<IUploadService, UploadService>();
+            services.AddScoped<YouTrackHttpClient>();
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
