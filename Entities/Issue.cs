@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace TaskStorage.Controllers.Entities;
 
@@ -23,63 +22,6 @@ public class Issue
 
     public TimeSpan SpentTime { get; set; }
 
-    public class CommentConverter : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(Comment);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
-        {
-            var obj = JObject.Load(reader);
-            var comment = new Comment
-            {
-                Text = (string)obj["text"],
-                Author = obj["author"]?["login"]?.ToString()
-            };
-
-            return comment;
-        }
-        
-        public override bool CanWrite => false;
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class AssigneeConverter : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(Assignee);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
-        {
-            var obj = JObject.Load(reader);
-            var assigneeSection = obj["customFields"]?
-                .FirstOrDefault(section => (string)section["name"] == "Assignee");
-
-            var assignee = new Assignee
-            {
-                Login = assigneeSection?["value"]?["login"]?.ToString()
-            };
-
-            return assignee;
-        }
-        
-        public override bool CanWrite => false;
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-    }
 
     public Issue(string id, string? name, string? description, List<Comment>? comments, Assignee assignee, string type,
         State state, Priority priority, TimeSpan spentTime)

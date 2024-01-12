@@ -14,7 +14,7 @@ public class UploadService : IUploadService
         var jsonResponse = await response.Content.ReadAsStringAsync();
         var settings = new JsonSerializerSettings
         {
-            Converters = { new Issue.CommentConverter(), new Issue.AssigneeConverter() },
+            Converters = { new Converters.CommentConverter(), new Converters.AssigneeConverter() },
             ContractResolver = new DefaultContractResolver
             {
                 NamingStrategy = new SnakeCaseNamingStrategy()
