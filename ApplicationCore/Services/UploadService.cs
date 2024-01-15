@@ -1,7 +1,7 @@
 using ApplicationCore.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using ApplicationCore.Entities;
+using Entities.Entities;
 
 namespace ApplicationCore.Services;
 

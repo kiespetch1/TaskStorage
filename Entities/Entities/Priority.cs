@@ -1,4 +1,4 @@
-namespace ApplicationCore.Entities;
+namespace Entities.Entities;
 
 public enum Priority
 {

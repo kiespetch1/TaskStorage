@@ -1,6 +1,4 @@
-using Newtonsoft.Json;
-
-namespace ApplicationCore.Entities;
+namespace Entities.Entities;
 
 public class Comment
 {

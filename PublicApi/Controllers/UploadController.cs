@@ -1,8 +1,8 @@
-using System.Net.Http.Headers;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApplicationCore.Controllers
+namespace PublicApi.Controllers
 {
     [ApiController]
     [Route("api/")]
@@ -14,12 +14,6 @@ namespace ApplicationCore.Controllers
         {
             _uploadService = uploadService;
         }
-        
-        private static HttpClient client = new()
-        {
-            BaseAddress = new Uri("https://testjiraintegration.youtrack.cloud/api/issues/"),
-            DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer","perm:cm9vdA==.NDktMQ==.SxDRgvTW9ItJ6hGswCqHuMFzFVpYBz")}
-        };
 
         [Route("upload")]
         [HttpGet]
@@ -27,7 +21,7 @@ namespace ApplicationCore.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> Upload()
         {
-            var issues = await _uploadService.Upload(client);
+            var issues = await _uploadService.Upload(new YouTrackHttpClient());
             return Ok(issues);
         }
     }

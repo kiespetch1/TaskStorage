@@ -1,4 +1,4 @@
-using ApplicationCore.Entities;
+using Entities.Entities;
 
 namespace ApplicationCore.Interfaces;
 

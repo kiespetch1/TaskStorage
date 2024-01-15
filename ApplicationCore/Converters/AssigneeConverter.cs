@@ -1,4 +1,4 @@
-using ApplicationCore.Entities;
+using Entities.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
