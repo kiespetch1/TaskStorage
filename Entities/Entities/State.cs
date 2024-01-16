@@ -2,7 +2,6 @@ namespace Entities.Entities;
 
 public enum State
 {
-    Released,
     ToDo,
     Open,
     InProgress,
@@ -19,5 +18,6 @@ public enum State
     Testing,
     BugsFound,
     Done,
+    Released,
     Cancelled
 }

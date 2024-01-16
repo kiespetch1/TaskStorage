@@ -27,7 +27,7 @@ namespace PublicApi
                     var customConverters = new List<JsonConverter>
                     {
                         new CommentConverter(),
-                        new AssigneeConverter(),
+                        new CustomFieldsConverter(),
                     };
 
                     foreach (var converter in customConverters)

@@ -1,4 +1,4 @@
-namespace Entities.Entities;
+namespace Entities.Entities.DTOs;
 
 public class IssueIdData
 {

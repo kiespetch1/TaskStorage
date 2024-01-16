@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Type = Entities.Entities.DTOs.Type;
 
 namespace Entities.Entities;
 
@@ -16,8 +17,7 @@ public class Issue
 
     public Assignee Assignee { get; set; }
     
-    [JsonProperty("$type")] 
-    public string Type { get; set; }
+    public Type Type { get; set; }
     
     public State State { get; set; }
 
@@ -25,8 +25,7 @@ public class Issue
 
     public TimeSpan SpentTime { get; set; }
 
-
-    public Issue(string id, string? name, string? description, List<Comment>? comments, Assignee assignee, string type,
+    public Issue(string id, string? name, string? description, List<Comment>? comments, Assignee assignee, Type type,
         State state, Priority priority, TimeSpan spentTime)
     {
         Id = id;
