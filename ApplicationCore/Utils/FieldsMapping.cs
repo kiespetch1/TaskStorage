@@ -32,4 +32,10 @@ public static class FieldsMapping
 
         return issue;
     }
+
+    public static Issue AddWorkLogs(this Issue issue, List<WorkLogInfo> workLogList)
+    {
+        issue.WorkLogs = workLogList;
+        return issue;
+    }
 }

@@ -28,6 +28,7 @@ namespace PublicApi
                     {
                         new CommentConverter(),
                         new CustomFieldsConverter(),
+                        new WorkLogConverter()
                     };
 
                     foreach (var converter in customConverters)

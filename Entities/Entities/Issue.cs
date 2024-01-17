@@ -1,3 +1,4 @@
+using Entities.Entities.DTOs;
 using Newtonsoft.Json;
 using Type = Entities.Entities.DTOs.Type;
 
@@ -6,6 +7,9 @@ namespace Entities.Entities;
 public class Issue
 {
     public string Id { get; set; }
+
+    [JsonProperty("idReadable")]
+    public string Key { get; set; }
 
     [JsonProperty("summary")] 
     public string? Name { get; set; }
@@ -24,6 +28,8 @@ public class Issue
     public Priority Priority { get; set; }
 
     public TimeSpan SpentTime { get; set; }
+
+    public List<WorkLogInfo> WorkLogs { get; set; }
 
     public Issue(string id, string? name, string? description, List<Comment>? comments, Assignee assignee, Type type,
         State state, Priority priority, TimeSpan spentTime)
