@@ -19,9 +19,19 @@ namespace PublicApi.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Upload()
+        public async Task<IActionResult> UploadAll()
         {
-            var issues = await _uploadService.Upload(new YouTrackHttpClient());
+            var issues = await _uploadService.UploadAll(new YouTrackHttpClient());
+            return Ok(issues);
+        }
+        
+        [Route("uploadNew")]
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> UploadNew()
+        {
+            var issues = await _uploadService.UploadNew(new YouTrackHttpClient());
             return Ok(issues);
         }
     }

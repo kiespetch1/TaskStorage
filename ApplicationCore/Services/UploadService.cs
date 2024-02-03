@@ -1,29 +1,44 @@
 using ApplicationCore.Converters;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Entities.Entities;
 using Entities.Entities.DTOs;
-using static ApplicationCore.Utils.FieldsMapping;
 
 namespace ApplicationCore.Services;
 
 public class UploadService : IUploadService
 {
-    public async Task<List<Issue>> Upload(HttpClient client)
+    JsonSerializerSettings settings = new()
+    {
+        Converters = { new CommentConverter(), new CustomFieldsConverter(), new WorkLogConverter() },
+        ContractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new SnakeCaseNamingStrategy()
+        }
+    };
+    public async Task<List<Issue>> UploadAll(HttpClient client)
     {
         using var response = await client.GetAsync("");
         var jsonResponse = await response.Content.ReadAsStringAsync();
-        var settings = new JsonSerializerSettings
-        {
-            Converters = { new CommentConverter(), new CustomFieldsConverter(), new WorkLogConverter() },
-            ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new SnakeCaseNamingStrategy()
-            }
-        };
+        
+        var idList = JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
+        return await ParseIssues(idList, client);
+    }
 
-        var ids = JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
+    public async Task<List<Issue>> UploadNew(HttpClient client)
+    {
+        using var response = await client.GetAsync("?filter=updated: {date from=" 
+                                                   + GlobalVariables.LastDbUpdateTime + "}..{current date}");
+        var jsonResponse = await response.Content.ReadAsStringAsync();
+        var idList = JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
+        
+        return await ParseIssues(idList, client);
+    }
+
+    public async Task<List<Issue>> ParseIssues(List<IssueIdData> idList, HttpClient client)
+    {
         var issues = new List<Issue>();
         var customFields = new List<CustomFieldInfo>();
         const string issueQueryUrl =
@@ -33,12 +48,12 @@ public class UploadService : IUploadService
         const string workLogQueryUrl = "/timeTracking/workItems?fields=author(login),creator(login)," +
                                        "duration(id,minutes),text,date";
 
-        foreach (var a in ids)
+        foreach (var entry in idList)
         {
-            using var issueResponse = await client.GetAsync(a.Id + issueQueryUrl);
+            using var issueResponse = await client.GetAsync(entry.Id + issueQueryUrl);
             var jsonIssueData = await issueResponse.Content.ReadAsStringAsync();
 
-            using var workLogResponse = await client.GetAsync(a.Id + workLogQueryUrl);
+            using var workLogResponse = await client.GetAsync(entry.Id + workLogQueryUrl);
             var jsonWorkLogData = await workLogResponse.Content.ReadAsStringAsync();
 
             if (jsonIssueData == null) continue;
@@ -55,7 +70,7 @@ public class UploadService : IUploadService
                     .AddCustomParameters(customFields));
             }
         }
-
+        
         return issues;
     }
 }
