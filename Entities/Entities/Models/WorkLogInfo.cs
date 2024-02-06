@@ -1,5 +1,8 @@
-namespace Entities.Entities.DTOs;
+namespace TaskStorage.Entities.Models;
 
+/// <summary>
+/// Представляет информацию о выполненной работе.
+/// </summary>
 public class WorkLogInfo
 {
     public int Duration { get; set; }

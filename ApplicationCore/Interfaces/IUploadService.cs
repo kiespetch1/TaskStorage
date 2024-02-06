@@ -1,13 +1,29 @@
-using Entities.Entities;
-using Entities.Entities.DTOs;
+using TaskStorage.Entities;
+using TaskStorage.Entities.Models;
 
-namespace ApplicationCore.Interfaces;
+namespace TaskStorage.Interfaces;
 
+/// <summary>
+/// Определяет методы выгрузки задач с YouTrack.
+/// </summary>
 public interface IUploadService
 {
-    public Task<List<Issue>> UploadAll(HttpClient client);
+    /// <summary>
+    /// Выгружает с YouTrack все задачи.
+    /// </summary>
+    /// <returns>Список задач.</returns>
+    public Task<List<Issue>> UploadAll();
 
-    public Task<List<Issue>> ParseIssues(List<IssueIdData> idList, HttpClient client);
+    /// <summary>
+    /// Парсит данные JSON в модель.
+    /// </summary>
+    /// <param name="idList">Список id необходимых задач.</param>
+    /// <returns>Список задач.</returns>
+    public Task<List<Issue>> ParseIssues(List<IssueIdData> idList);
 
-    public Task<List<Issue>> UploadNew(HttpClient client);
+    /// <summary>
+    /// Выгружает с YouTrack только новые задачи.
+    /// </summary>
+    /// <returns>Список задач.</returns>
+    public Task<List<Issue>> UploadNew();
 }

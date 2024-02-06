@@ -1,14 +1,14 @@
-using ApplicationCore.Converters;
-using ApplicationCore.Interfaces;
-using ApplicationCore.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using TaskStorage.Converters;
+using TaskStorage.Interfaces;
+using TaskStorage.Services;
 
-namespace PublicApi
+namespace TaskStorage
 {
     public class Startup
     {
@@ -38,6 +38,8 @@ namespace PublicApi
                 });
             
             services.AddScoped<IUploadService, UploadService>();
+            services.AddScoped<IStorageService, StorageService>();
+            services.AddHttpClient();
             services.AddScoped<YouTrackHttpClient>();
 
             services.AddEndpointsApiExplorer();

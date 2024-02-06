@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>Entities</AssemblyName>
-        <RootNamespace>Entities</RootNamespace>
+        <RootNamespace>TaskStorage</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

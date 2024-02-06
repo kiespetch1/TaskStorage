@@ -1,9 +1,13 @@
-using Entities.Entities.DTOs;
 using Newtonsoft.Json;
-using Type = Entities.Entities.DTOs.Type;
+using TaskStorage.Entities.Enums;
+using TaskStorage.Entities.Models;
+using Type = TaskStorage.Entities.Models.Type;
 
-namespace Entities.Entities;
+namespace TaskStorage.Entities;
 
+/// <summary>
+/// Представляет задачу.
+/// </summary>
 public class Issue
 {
     public string Id { get; set; }

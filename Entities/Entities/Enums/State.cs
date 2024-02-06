@@ -1,5 +1,8 @@
-namespace Entities.Entities;
+namespace TaskStorage.Entities.Enums;
 
+/// <summary>
+/// Представляет статус задачи.
+/// </summary>
 public enum State
 {
     ToDo,

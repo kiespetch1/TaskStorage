@@ -1,15 +1,22 @@
-using ApplicationCore.Converters;
-using ApplicationCore.Interfaces;
-using ApplicationCore.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Entities.Entities;
-using Entities.Entities.DTOs;
+using TaskStorage.Converters;
+using TaskStorage.Entities;
+using TaskStorage.Entities.Models;
+using TaskStorage.Interfaces;
+using TaskStorage.Utils;
 
-namespace ApplicationCore.Services;
+namespace TaskStorage.Services;
 
 public class UploadService : IUploadService
 {
+    private readonly HttpClient _client;
+
+    public UploadService(YouTrackHttpClient youTrackHttpClient)
+    {
+        _client = youTrackHttpClient.GetClient();
+    }
+    
     JsonSerializerSettings settings = new()
     {
         Converters = { new CommentConverter(), new CustomFieldsConverter(), new WorkLogConverter() },
@@ -18,31 +25,35 @@ public class UploadService : IUploadService
             NamingStrategy = new SnakeCaseNamingStrategy()
         }
     };
-    public async Task<List<Issue>> UploadAll(HttpClient client)
+    
+    /// <inheritdoc cref="IUploadService.UploadAll()"/>
+    public async Task<List<Issue>> UploadAll()
     {
-        using var response = await client.GetAsync("");
+        using var response = await _client.GetAsync("issues/");
         var jsonResponse = await response.Content.ReadAsStringAsync();
         
         var idList = JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
-        return await ParseIssues(idList, client);
+        return await ParseIssues(idList);
     }
 
-    public async Task<List<Issue>> UploadNew(HttpClient client)
+    /// <inheritdoc cref="IUploadService.UploadNew()"/>
+    public async Task<List<Issue>> UploadNew()
     {
-        using var response = await client.GetAsync("?filter=updated: {date from=" 
+        using var response = await _client.GetAsync("issues?filter=updated: {date from=" 
                                                    + GlobalVariables.LastDbUpdateTime + "}..{current date}");
         var jsonResponse = await response.Content.ReadAsStringAsync();
         var idList = JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
         
-        return await ParseIssues(idList, client);
+        return await ParseIssues(idList);
     }
 
-    public async Task<List<Issue>> ParseIssues(List<IssueIdData> idList, HttpClient client)
+    /// <inheritdoc cref="IUploadService.ParseIssues(System.Collections.Generic.List{TaskStorage.Entities.Models.IssueIdData})"/>
+    public async Task<List<Issue>> ParseIssues(List<IssueIdData> idList)
     {
         var issues = new List<Issue>();
         var customFields = new List<CustomFieldInfo>();
         const string issueQueryUrl =
-            "?fields=id,idReadable,summary,description,comments(text,author(login,fullName)),assignee,type,state," +
+            "issues?fields=id,idReadable,summary,description,comments(text,author(login,fullName)),assignee,type,state," +
             "priority,spentTime,customFields(name,value($type,value,login,ordinal(name),minutes))";
 
         const string workLogQueryUrl = "/timeTracking/workItems?fields=author(login),creator(login)," +
@@ -50,10 +61,10 @@ public class UploadService : IUploadService
 
         foreach (var entry in idList)
         {
-            using var issueResponse = await client.GetAsync(entry.Id + issueQueryUrl);
+            using var issueResponse = await _client.GetAsync(entry.Id + issueQueryUrl);
             var jsonIssueData = await issueResponse.Content.ReadAsStringAsync();
 
-            using var workLogResponse = await client.GetAsync(entry.Id + workLogQueryUrl);
+            using var workLogResponse = await _client.GetAsync(entry.Id + workLogQueryUrl);
             var jsonWorkLogData = await workLogResponse.Content.ReadAsStringAsync();
 
             if (jsonIssueData == null) continue;

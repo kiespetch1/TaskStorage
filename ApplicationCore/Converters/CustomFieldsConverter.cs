@@ -1,9 +1,12 @@
-using Entities.Entities.DTOs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TaskStorage.Entities.Models;
 
-namespace ApplicationCore.Converters;
+namespace TaskStorage.Converters;
 
+/// <summary>
+/// Преобразует данные о комментариях из JSON.
+/// </summary>
 public class CustomFieldsConverter : JsonConverter
 {
     public override bool CanWrite => false;

@@ -1,9 +1,12 @@
-using Entities.Entities;
-using Entities.Entities.DTOs;
-using Type = Entities.Entities.DTOs.Type;
+using TaskStorage.Entities;
+using TaskStorage.Entities.Enums;
+using TaskStorage.Entities.Models;
+using Type = TaskStorage.Entities.Models.Type;
 
-namespace ApplicationCore.Utils;
-
+namespace TaskStorage.Utils;
+/// <summary>
+/// Метод для маппинга полей.
+/// </summary>
 public static class FieldsMapping
 {
     public static Issue AddCustomParameters(this Issue issue, List<CustomFieldInfo> customFieldsList)

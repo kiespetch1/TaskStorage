@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
         <OutputType>Library</OutputType>
+        <RootNamespace>TaskStorage</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

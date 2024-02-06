@@ -1,5 +1,8 @@
-namespace Entities.Entities;
+namespace TaskStorage.Entities;
 
+/// <summary>
+/// Представляет комментарий к задаче.
+/// </summary>
 public class Comment
 {
     public string? Text { get; set; }

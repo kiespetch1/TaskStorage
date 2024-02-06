@@ -1,9 +1,12 @@
-using Entities.Entities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TaskStorage.Entities;
 
-namespace ApplicationCore.Converters;
+namespace TaskStorage.Converters;
 
+/// <summary>
+/// Преобразует данные о кастомных полях из JSON.
+/// </summary>
 public class CommentConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
@@ -11,7 +14,7 @@ public class CommentConverter : JsonConverter
         return objectType == typeof(Comment);
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, 
         JsonSerializer serializer)
     {
         var obj = JObject.Load(reader);

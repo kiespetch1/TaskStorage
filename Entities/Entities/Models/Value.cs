@@ -1,5 +1,8 @@
-namespace Entities.Entities.DTOs;
+namespace TaskStorage.Entities.Models;
 
+/// <summary>
+/// Представляет значения, получаемые из JSON.
+/// </summary>
 public class Value
 {
     public Type Type { get; set; }

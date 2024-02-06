@@ -1,5 +1,8 @@
-namespace Entities.Entities.DTOs;
+namespace TaskStorage.Entities.Models;
 
+/// <summary>
+/// Представляет тип задачи.
+/// </summary>
 public enum Type
 {
     Bug,

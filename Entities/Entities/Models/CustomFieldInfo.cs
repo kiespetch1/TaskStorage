@@ -1,5 +1,8 @@
-namespace Entities.Entities.DTOs;
+namespace TaskStorage.Entities.Models;
 
+/// <summary>
+/// Представляет данные кастомных полей.
+/// </summary>
 public class CustomFieldInfo
 {
     public string Name { get; set; }
