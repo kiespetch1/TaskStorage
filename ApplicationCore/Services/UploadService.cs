@@ -53,7 +53,7 @@ public class UploadService : IUploadService
         var issues = new List<Issue>();
         var customFields = new List<CustomFieldInfo>();
         const string issueQueryUrl =
-            "issues?fields=id,idReadable,summary,description,comments(text,author(login,fullName)),assignee,type,state," +
+            "?fields=id,idReadable,summary,description,comments(text,author(login,fullName)),assignee,type,state," +
             "priority,spentTime,customFields(name,value($type,value,login,ordinal(name),minutes))";
 
         const string workLogQueryUrl = "/timeTracking/workItems?fields=author(login),creator(login)," +
@@ -61,10 +61,11 @@ public class UploadService : IUploadService
 
         foreach (var entry in idList)
         {
-            using var issueResponse = await _client.GetAsync(entry.Id + issueQueryUrl);
+            using var issueResponse = await _client.GetAsync("issues/" + entry.Id + issueQueryUrl);
+            var tamp = "https://testjiraintegration.youtrack.cloud/api/" + entry.Id + workLogQueryUrl;
             var jsonIssueData = await issueResponse.Content.ReadAsStringAsync();
 
-            using var workLogResponse = await _client.GetAsync(entry.Id + workLogQueryUrl);
+            using var workLogResponse = await _client.GetAsync("issues/" + entry.Id + workLogQueryUrl);
             var jsonWorkLogData = await workLogResponse.Content.ReadAsStringAsync();
 
             if (jsonIssueData == null) continue;
