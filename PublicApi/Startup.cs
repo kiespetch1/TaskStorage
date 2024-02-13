@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -7,17 +8,13 @@ using Newtonsoft.Json;
 using TaskStorage.Converters;
 using TaskStorage.Interfaces;
 using TaskStorage.Services;
+using TaskStorage.Utils;
 
 namespace TaskStorage
 {
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; } = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -39,9 +36,14 @@ namespace TaskStorage
             
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<IStorageService, StorageService>();
-            services.AddHttpClient();
+            services.AddSingleton<YouTrackHttpClient>();
             services.AddScoped<YouTrackHttpClient>();
-
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var databaseString = Configuration.GetConnectionString("DatabaseName");
+            services.AddDbContext<IDatabaseContext, ApplicationContext>(options =>
+            {
+                options.UseMongoDB("mongodb://localhost:27017", "task-tracking");
+            });
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }

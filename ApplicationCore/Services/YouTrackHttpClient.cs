@@ -1,22 +1,18 @@
 using System.Net.Http.Headers;
 
-namespace TaskStorage.Services
+public class YouTrackHttpClient
 {
-    public class YouTrackHttpClient
+    private readonly HttpClient _client;
+
+    public YouTrackHttpClient()
     {
-        private readonly HttpClient _httpClient = new()
+        _client = new HttpClient
         {
-            BaseAddress = new Uri("https://testjiraintegration.youtrack.cloud/api/"),
-            DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", "perm:cm9vdA==.NDktMQ==.SxDRgvTW9ItJ6hGswCqHuMFzFVpYBz") }
+            BaseAddress = new Uri("https://testjiraintegration.youtrack.cloud/api/")
         };
 
-        /// <summary>
-        /// Возвращает HTTP-клиент для запросов к YouTrack. 
-        /// </summary>
-        /// <returns></returns>
-        public HttpClient GetClient()
-        {
-            return _httpClient;
-        }
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "perm:cm9vdA==.NDktMQ==.SxDRgvTW9ItJ6hGswCqHuMFzFVpYBz");
     }
+
+    public HttpClient GetClient => _client;
 }
