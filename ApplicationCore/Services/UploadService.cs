@@ -62,6 +62,7 @@ public class UploadService : IUploadService
         var tasks = idList.Select(async entry =>
         {
             using var issueResponse = await _client.GetClient.GetAsync("issues/" + entry.Id + issueQueryUrl);
+            
             var jsonIssueData = await issueResponse.Content.ReadAsStringAsync();
 
             using var workLogResponse = await _client.GetClient.GetAsync("issues/" + entry.Id + workLogQueryUrl);
