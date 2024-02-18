@@ -38,7 +38,6 @@ namespace TaskStorage
                 });
             
             services.AddScoped<IUploadService, UploadService>();
-            services.AddScoped<IStorageService, StorageService>();
             services.AddHttpClient();
             services.AddScoped<YouTrackHttpClient>();
 
