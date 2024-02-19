@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using TaskStorage.Interfaces;
 using TaskStorage.Utils;
 
@@ -18,19 +19,25 @@ public class StorageService : IStorageService
     {
         var service = new UploadService(_client);
         var issues = await service.UploadNew();
-
+        
+        IEnumerable<Task> tasks;
         if (GlobalVariables.LastDbUpdateTime == new DateTime(1, 1, 1))
         {
-            await _ctx.Issues.AddRangeAsync(issues);
-            await _ctx.SaveChangesAsync();
+            tasks = issues.Select(async entry =>
+            {
+                _ctx.CreateAsync(entry);
+            });
         }
         else
         {
-            _ctx.Issues.UpdateRange(issues);
-            await _ctx.SaveChangesAsync();
+            tasks = issues.Select(async entry =>
+            {
+                _ctx.UpdateAsync(entry);
+            });
         }
-
-
+        
+        await Task.WhenAll(tasks);
+        
         GlobalVariables.LastDbUpdateTime = DateTime.UtcNow;
     }
 }

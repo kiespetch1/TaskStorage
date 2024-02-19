@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using TaskStorage.Converters;
 using TaskStorage.Interfaces;
@@ -33,17 +34,12 @@ namespace TaskStorage
                         options.SerializerSettings.Converters.Add(converter);
                     }
                 });
-            
+
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddSingleton<YouTrackHttpClient>();
-            services.AddScoped<YouTrackHttpClient>();
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            var databaseString = Configuration.GetConnectionString("DatabaseName");
-            services.AddDbContext<IDatabaseContext, ApplicationContext>(options =>
-            {
-                options.UseMongoDB("mongodb://localhost:27017", "task-tracking");
-            });
+            services.AddScoped<IDatabaseContext, DatabaseService>();
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
@@ -57,15 +53,12 @@ namespace TaskStorage
             }
 
             app.UseHttpsRedirection();
-            
-            app.UseRouting(); 
-            
+
+            app.UseRouting();
+
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers(); 
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

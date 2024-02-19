@@ -1,14 +1,17 @@
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using TaskStorage.Entities;
 
 namespace TaskStorage.Utils;
 
-// <summary>
-/// Database context class
-/// <summary/>
 public interface IDatabaseContext
 {
-    public DbSet<Issue> Issues { get; set; }
+    public Task<List<Issue>> GetAsync();
 
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+    public Task<Issue?> GetAsync(string id);
+
+    public Task CreateAsync(Issue newIssue);
+
+    public Task UpdateAsync(Issue updatedIssue);
+
+    public Task RemoveAsync(string id);
 }
