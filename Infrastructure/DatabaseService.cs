@@ -1,19 +1,17 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using TaskStorage.Entities;
-using TaskStorage.Services;
-using TaskStorage.Utils;
+using TaskStorage.Interfaces;
 
 namespace TaskStorage;
 
-public class DatabaseService : IDatabaseContext
+public class DatabaseService : IDatabaseService
 {
     private readonly IMongoCollection<Issue> _issuesCollection;
 
     public DatabaseService(IOptions<ConnectionStrings> connectionStrings)
     {
-        var mongoClient = new MongoClient(
-            (string)connectionStrings.Value.ConnectionString);
+        var mongoClient = new MongoClient(connectionStrings.Value.ConnectionString);
 
         var mongoDatabase = mongoClient.GetDatabase(
             connectionStrings.Value.DatabaseName);
@@ -21,12 +19,6 @@ public class DatabaseService : IDatabaseContext
         _issuesCollection = mongoDatabase.GetCollection<Issue>(
             connectionStrings.Value.CollectionName);
     }
-
-    public async Task<List<Issue>> GetAsync() =>
-        await _issuesCollection.Find(_ => true).ToListAsync();
-
-    public async Task<Issue?> GetAsync(string id) =>
-        await _issuesCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
     public async Task CreateAsync(Issue newIssue) =>
         await _issuesCollection.InsertOneAsync(newIssue);
@@ -36,7 +28,4 @@ public class DatabaseService : IDatabaseContext
         var id = updatedIssue.Id;
         await _issuesCollection.ReplaceOneAsync(x => x.Id == id, updatedIssue);
     }
-
-    public async Task RemoveAsync(string id) =>
-        await _issuesCollection.DeleteOneAsync(x => x.Id == id);
 }

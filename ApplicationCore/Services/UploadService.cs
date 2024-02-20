@@ -39,8 +39,8 @@ public class UploadService : IUploadService
     /// <inheritdoc cref="IUploadService.UploadNew()"/>
     public async Task<List<Issue>> UploadNew()
     {
-        GlobalVariables.LastDbUpdateTime = new DateTime(2024, 02, 18);
-        var address = $"issues?query=updated: {GlobalVariables.LastDbUpdateTime:yyyy-MM-dd} .. *";
+        var address = $"issues?query=updated: {GlobalVariables.LastDbUpdateTime:yyyy-MM-dd}" +
+                      $"T{GlobalVariables.LastDbUpdateTime:HH:mm} .. *";
         using var response = await _client.GetClient.GetAsync(address);
         var jsonResponse = await response.Content.ReadAsStringAsync();
         var idList =  JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);

@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MongoDB.Driver;
 using Newtonsoft.Json;
 using TaskStorage.Converters;
 using TaskStorage.Interfaces;
@@ -38,7 +36,7 @@ namespace TaskStorage
             services.AddScoped<IUploadService, UploadService>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddSingleton<YouTrackHttpClient>();
-            services.AddScoped<IDatabaseContext, DatabaseService>();
+            services.AddScoped<IDatabaseService, DatabaseService>();
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();

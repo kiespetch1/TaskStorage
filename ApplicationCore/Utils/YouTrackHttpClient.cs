@@ -1,5 +1,10 @@
 using System.Net.Http.Headers;
 
+namespace TaskStorage.Utils;
+
+/// <summary>
+/// Класс для создания HTTP-клиента для запросов.
+/// </summary>
 public class YouTrackHttpClient
 {
     private readonly HttpClient _client;

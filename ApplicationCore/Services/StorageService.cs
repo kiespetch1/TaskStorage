@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
 using TaskStorage.Interfaces;
+using TaskStorage.Jobs;
 using TaskStorage.Utils;
 
 namespace TaskStorage.Services;
@@ -7,14 +7,17 @@ namespace TaskStorage.Services;
 public class StorageService : IStorageService
 {
     private readonly YouTrackHttpClient _client;
-    private readonly IDatabaseContext _ctx;
+    private readonly IDatabaseService _ctx;
+    private readonly IConfiguration _configuration;
 
-    public StorageService(IDatabaseContext ctx, YouTrackHttpClient client)
+    public StorageService(IDatabaseService ctx, YouTrackHttpClient client, IConfiguration configuration)
     {
         _ctx = ctx;
         _client = client;
+        _configuration = configuration;
     }
 
+    /// <inheritdoc cref="IStorageService.StoreNewIssues()"/>
     public async Task StoreNewIssues()
     {
         var service = new UploadService(_client);
@@ -27,6 +30,7 @@ public class StorageService : IStorageService
             {
                 _ctx.CreateAsync(entry);
             });
+            await UpdateScheduler.Start(_configuration);
         }
         else
         {
