@@ -1,20 +1,23 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["TaskStorage.csproj", "./"]
-RUN dotnet restore "TaskStorage.csproj"
+COPY ["PublicApi/PublicApi.csproj", "PublicApi/"]
+COPY ["ApplicationCore/ApplicationCore.csproj", "ApplicationCore/"]
+COPY ["Entities/Entities.csproj", "Entities/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+RUN dotnet restore "PublicApi/PublicApi.csproj"
 COPY . .
-WORKDIR "/src/"
-RUN dotnet build "TaskStorage.csproj" -c Release -o /app/build
+WORKDIR "/src/PublicApi"
+RUN dotnet build "PublicApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "TaskStorage.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "PublicApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "TaskStorage.dll"]
+ENV ASPNETCORE_HTTP_PORTS=80
+EXPOSE 80
+ENTRYPOINT ["dotnet", "PublicApi.dll"]

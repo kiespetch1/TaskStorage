@@ -1,0 +1,30 @@
+﻿services:
+  task-storage:
+    image: tasks-api
+    depends_on: 
+      - "mongo-db"
+    environment:
+      - ConnectionStrings__ConnectionString=mongodb://localhost:27017
+      - ConnectionStrings__DatabaseName=task-tracking
+      - ConnectionString__CollectionName=issues
+      - UpdateCronSchedule=0 0 12 * * ?
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "8088:80"
+    build:
+      context: .
+      dockerfile: PublicApi/Dockerfile
+    networks:
+      - tasks  
+      
+  mongo-db:
+    image: mongo:7.0.5
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - tasks  
+        
+networks:
+  tasks:
+    driver: bridge
