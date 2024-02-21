@@ -1,3 +1,4 @@
+using TaskStorage.Entities;
 using TaskStorage.Interfaces;
 using TaskStorage.Jobs;
 using TaskStorage.Utils;
@@ -21,11 +22,12 @@ public class StorageService : IStorageService
     public async Task StoreNewIssues()
     {
         var service = new UploadService(_client);
-        var issues = await service.UploadNew();
+        List<Issue> issues;
         
         IEnumerable<Task> tasks;
         if (GlobalVariables.LastDbUpdateTime == new DateTime(1, 1, 1))
         {
+            issues = await service.UploadAll();
             tasks = issues.Select(async entry =>
             {
                 _ctx.CreateAsync(entry);
@@ -34,6 +36,7 @@ public class StorageService : IStorageService
         }
         else
         {
+            issues = await service.UploadNew();
             tasks = issues.Select(async entry =>
             {
                 _ctx.UpdateAsync(entry);
