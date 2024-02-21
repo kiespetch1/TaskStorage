@@ -24,7 +24,11 @@
       - "27017:27017"
     networks:
       - tasks  
+    volumes:
+      - db-data:/data/db
         
 networks:
   tasks:
     driver: bridge
+volumes:
+  db-data:    
