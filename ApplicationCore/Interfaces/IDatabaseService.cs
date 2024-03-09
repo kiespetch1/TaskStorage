@@ -8,14 +8,14 @@ namespace TaskStorage.Interfaces;
 public interface IDatabaseService
 {
     /// <summary>
-    /// Добавляет данные о задаче в БД.
+    /// Добавляет данные о задачах в БД.
     /// </summary>
-    /// <param name="newIssue">Добавляемая задача.</param>
-    public Task CreateAsync(Issue newIssue);
+    /// <param name="issues">Список добавляемых задач.</param>
+    public Task InsertManyAsync(List<Issue> issues);
 
     /// <summary>
-    /// Обновляет данные о задаче в БД.
+    /// Добавляет или обновляет данные о задаче  в БД.
     /// </summary>
-    /// <param name="updatedIssue">Обновляемая задача.</param>
-    public Task UpdateAsync(Issue updatedIssue);
+    /// <param name="issue">Обновляемая задача.</param>
+    public Task CreateOrUpdateAsync(Issue issue);
 }

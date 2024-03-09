@@ -7,44 +7,34 @@ namespace TaskStorage.Services;
 
 public class StorageService : IStorageService
 {
-    private readonly YouTrackHttpClient _client;
     private readonly IDatabaseService _ctx;
     private readonly IConfiguration _configuration;
+    private readonly IUploadService _service;
 
-    public StorageService(IDatabaseService ctx, YouTrackHttpClient client, IConfiguration configuration)
+    public StorageService(IDatabaseService ctx, IConfiguration configuration, IUploadService service)
     {
         _ctx = ctx;
-        _client = client;
         _configuration = configuration;
+        _service = service;
     }
 
     /// <inheritdoc cref="IStorageService.StoreNewIssues()"/>
     public async Task StoreNewIssues()
     {
-        var service = new UploadService(_client);
         List<Issue> issues;
-        
-        IEnumerable<Task> tasks;
+
         if (GlobalVariables.LastDbUpdateTime == new DateTime(1, 1, 1))
         {
-            issues = await service.UploadAll();
-            tasks = issues.Select(async entry =>
-            {
-                _ctx.CreateAsync(entry);
-            });
+            issues = await _service.UploadNew();
+            await _ctx.InsertManyAsync(issues);
             await UpdateScheduler.Start(_configuration);
         }
         else
         {
-            issues = await service.UploadNew();
-            tasks = issues.Select(async entry =>
-            {
-                _ctx.UpdateAsync(entry);
-            });
+            issues = await _service.UploadNew();
+            var tasks = issues.Select(async entry => { await _ctx.CreateOrUpdateAsync(entry); });
+            await Task.WhenAll(tasks);
         }
-        
-        await Task.WhenAll(tasks);
-        
         GlobalVariables.LastDbUpdateTime = DateTime.UtcNow;
     }
 }

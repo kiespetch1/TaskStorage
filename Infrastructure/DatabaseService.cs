@@ -20,6 +20,19 @@ public class DatabaseService : IDatabaseService
             connectionStrings.Value.CollectionName);
     }
 
+    public async Task CreateOrUpdateAsync(Issue issue)
+    {
+        var isExist =  await _issuesCollection.FindAsync(x => x.Id == issue.Id).Result.AnyAsync();
+        if (isExist)
+        {
+            await _issuesCollection.ReplaceOneAsync(x => x.Id == issue.Id, issue);
+        }
+        else
+        {
+            await _issuesCollection.InsertOneAsync(issue);
+        }
+    }
+
     public async Task CreateAsync(Issue newIssue) =>
         await _issuesCollection.InsertOneAsync(newIssue);
 
@@ -27,5 +40,10 @@ public class DatabaseService : IDatabaseService
     {
         var id = updatedIssue.Id;
         await _issuesCollection.ReplaceOneAsync(x => x.Id == id, updatedIssue);
+    }
+
+    public async Task InsertManyAsync(List<Issue> issues)
+    {
+        await _issuesCollection.InsertManyAsync(issues);
     }
 }
