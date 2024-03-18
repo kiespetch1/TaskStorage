@@ -7,17 +7,13 @@ using Newtonsoft.Json;
 using TaskStorage.Converters;
 using TaskStorage.Interfaces;
 using TaskStorage.Services;
+using TaskStorage.Utils;
 
 namespace TaskStorage
 {
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; } = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -36,11 +32,12 @@ namespace TaskStorage
                         options.SerializerSettings.Converters.Add(converter);
                     }
                 });
-            
-            services.AddScoped<IUploadService, UploadService>();
-            services.AddHttpClient();
-            services.AddScoped<YouTrackHttpClient>();
 
+            services.AddScoped<IUploadService, UploadService>();
+            services.AddScoped<IStorageService, StorageService>();
+            services.AddSingleton<YouTrackHttpClient>();
+            services.AddScoped<IDatabaseService, DatabaseService>();
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
@@ -53,16 +50,13 @@ namespace TaskStorage
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
-            
-            app.UseRouting(); 
-            
+            //app.UseHttpsRedirection();
+
+            app.UseRouting();
+
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers(); 
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 using TaskStorage.Entities.Enums;
 using TaskStorage.Entities.Models;
@@ -10,6 +12,8 @@ namespace TaskStorage.Entities;
 /// </summary>
 public class Issue
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string Id { get; set; }
 
     [JsonProperty("idReadable")]

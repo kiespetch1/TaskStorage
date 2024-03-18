@@ -4,5 +4,5 @@ namespace TaskStorage.Utils;
 /// </summary>
 public class GlobalVariables
 {
-    internal static DateOnly LastDbUpdateTime { get; set; } = new(1,1,1);
+    internal static DateTime LastDbUpdateTime { get; set; } = new(1,1,1);
 }

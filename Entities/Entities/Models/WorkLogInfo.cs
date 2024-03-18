@@ -1,3 +1,6 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace TaskStorage.Entities.Models;
 
 /// <summary>
@@ -6,7 +9,9 @@ namespace TaskStorage.Entities.Models;
 public class WorkLogInfo
 {
     public int Duration { get; set; }
-    public DateOnly Date { get; set; }
+    
+    [BsonRepresentation(BsonType.DateTime)]
+    public DateTime Date { get; set; }
     public string Text { get; set; }
     public string Author { get; set; }
 }
