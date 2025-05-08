@@ -30,7 +30,7 @@ public class WorkLogConverter : JsonConverter
             var author = field?["author"]?["login"].ToString();
             
             var dateTime = DateTimeOffset.FromUnixTimeSeconds(date / 1000).DateTime;
-            var dateOnly = new DateOnly(dateTime.Year, dateTime.Month, dateTime.Day);
+            var dateOnly = new DateTime(dateTime.Year, dateTime.Month, dateTime.Day);
         
         
             list.Add(new WorkLogInfo

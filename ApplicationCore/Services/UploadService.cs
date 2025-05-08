@@ -10,11 +10,11 @@ namespace TaskStorage.Services;
 
 public class UploadService : IUploadService
 {
-    private readonly HttpClient _client;
+    private readonly YouTrackHttpClient _client;
 
-    public UploadService(YouTrackHttpClient youTrackHttpClient)
+    public UploadService(YouTrackHttpClient client)
     {
-        _client = youTrackHttpClient.GetClient();
+        _client = client;
     }
     
     JsonSerializerSettings settings = new()
@@ -29,7 +29,7 @@ public class UploadService : IUploadService
     /// <inheritdoc cref="IUploadService.UploadAll()"/>
     public async Task<List<Issue>> UploadAll()
     {
-        using var response = await _client.GetAsync("issues/");
+        using var response = await _client.GetClient.GetAsync("issues/");
         var jsonResponse = await response.Content.ReadAsStringAsync();
         
         var idList = JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
@@ -39,10 +39,11 @@ public class UploadService : IUploadService
     /// <inheritdoc cref="IUploadService.UploadNew()"/>
     public async Task<List<Issue>> UploadNew()
     {
-        using var response = await _client.GetAsync("issues?filter=updated: {date from=" 
-                                                   + GlobalVariables.LastDbUpdateTime + "}..{current date}");
+        var address = $"issues?query=updated: {GlobalVariables.LastDbUpdateTime:yyyy-MM-dd}" +
+                      $"T{GlobalVariables.LastDbUpdateTime:HH:mm} .. *";
+        using var response = await _client.GetClient.GetAsync(address);
         var jsonResponse = await response.Content.ReadAsStringAsync();
-        var idList = JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
+        var idList =  JsonConvert.DeserializeObject<List<IssueIdData>>(jsonResponse, settings);
         
         return await ParseIssues(idList);
     }
@@ -61,10 +62,11 @@ public class UploadService : IUploadService
 
         var tasks = idList.Select(async entry =>
         {
-            using var issueResponse = await _client.GetAsync("issues/" + entry.Id + issueQueryUrl);
+            using var issueResponse = await _client.GetClient.GetAsync("issues/" + entry.Id + issueQueryUrl);
+            
             var jsonIssueData = await issueResponse.Content.ReadAsStringAsync();
 
-            using var workLogResponse = await _client.GetAsync("issues/" + entry.Id + workLogQueryUrl);
+            using var workLogResponse = await _client.GetClient.GetAsync("issues/" + entry.Id + workLogQueryUrl);
             var jsonWorkLogData = await workLogResponse.Content.ReadAsStringAsync();
 
             if (jsonIssueData == null) return;
